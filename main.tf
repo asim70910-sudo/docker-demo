@@ -5,6 +5,6 @@ resource "random_pet" "mypet" {
 }
 
 resource "local_file" "mypet" {
-  filename = var.file_name
-  content  = var.content
+  filename = "pets.txt"
+  content  = random_pet.mypet.id
 }
