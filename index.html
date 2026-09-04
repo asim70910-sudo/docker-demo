@@ -1,1 +1,1020 @@
-<h1>Hello from Jenkins Pipeline</h1>
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevOpsLab - Modern CI/CD and Cloud Infrastructure Platform">
+    <title>DevOpsLab | Build • Deploy • Scale</title>
+
+```
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #07111f;
+        color: #e8f0ff;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    /* Background */
+    .background {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(0, 153, 255, 0.16), transparent 28%),
+            radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.14), transparent 30%),
+            radial-gradient(circle at 50% 90%, rgba(0, 255, 170, 0.08), transparent 30%),
+            #07111f;
+    }
+
+    .grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.16;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+        background-size: 50px 50px;
+        mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.25;
+    }
+
+    .orb.one {
+        width: 300px;
+        height: 300px;
+        background: #008cff;
+        top: 10%;
+        left: -100px;
+    }
+
+    .orb.two {
+        width: 350px;
+        height: 350px;
+        background: #7c3aed;
+        right: -130px;
+        top: 25%;
+    }
+
+    /* Navigation */
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 18px 7%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(7, 17, 31, 0.72);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #00aaff, #7c3aed);
+        box-shadow: 0 0 25px rgba(0,170,255,0.35);
+    }
+
+    .logo span {
+        color: #69c9ff;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+        color: #aabbd1;
+        font-size: 0.95rem;
+    }
+
+    .nav-links a {
+        transition: 0.25s;
+    }
+
+    .nav-links a:hover {
+        color: #69c9ff;
+    }
+
+    .nav-button {
+        padding: 10px 18px;
+        border: 1px solid rgba(105,201,255,0.45);
+        border-radius: 10px;
+        color: #fff;
+        transition: 0.25s;
+    }
+
+    .nav-button:hover {
+        background: rgba(105,201,255,0.12);
+        transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+        min-height: 100vh;
+        padding: 150px 7% 90px;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: center;
+        gap: 70px;
+        max-width: 1450px;
+        margin: auto;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid rgba(105,201,255,0.25);
+        border-radius: 999px;
+        background: rgba(105,201,255,0.06);
+        color: #82d5ff;
+        font-size: 0.82rem;
+        margin-bottom: 25px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #35e68a;
+        border-radius: 50%;
+        box-shadow: 0 0 12px #35e68a;
+    }
+
+    h1 {
+        font-size: clamp(3.2rem, 7vw, 6.4rem);
+        line-height: 0.95;
+        letter-spacing: -5px;
+        margin-bottom: 28px;
+    }
+
+    .gradient-text {
+        background: linear-gradient(90deg, #69c9ff, #9d7aff, #63f3c0);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .hero-description {
+        max-width: 650px;
+        color: #9db0c8;
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button {
+        padding: 14px 22px;
+        border-radius: 11px;
+        font-weight: 700;
+        transition: 0.25s;
+    }
+
+    .primary-button {
+        background: linear-gradient(135deg, #0799ff, #7254e8);
+        box-shadow: 0 10px 35px rgba(36,139,255,0.22);
+    }
+
+    .secondary-button {
+        border: 1px solid rgba(255,255,255,0.13);
+        background: rgba(255,255,255,0.035);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Terminal */
+    .terminal {
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(5,12,23,0.82);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow:
+            0 30px 100px rgba(0,0,0,0.45),
+            0 0 70px rgba(0,145,255,0.08);
+        transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+    }
+
+    .terminal-header {
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.025);
+    }
+
+    .terminal-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+    }
+
+    .terminal-title {
+        margin-left: 8px;
+        color: #74869d;
+        font-size: 0.8rem;
+    }
+
+    .terminal-body {
+        padding: 25px;
+        font-family: Consolas, monospace;
+        font-size: 0.9rem;
+        color: #a9c0d8;
+    }
+
+    .line {
+        margin-bottom: 12px;
+    }
+
+    .prompt {
+        color: #63f3c0;
+    }
+
+    .command {
+        color: #fff;
+    }
+
+    .blue {
+        color: #69c9ff;
+    }
+
+    .purple {
+        color: #a98cff;
+    }
+
+    .green {
+        color: #63f3c0;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: #69c9ff;
+        vertical-align: middle;
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    /* Stats */
+    .stats {
+        max-width: 1250px;
+        margin: -20px auto 80px;
+        padding: 0 7%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+    }
+
+    .stat {
+        padding: 25px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 15px;
+        background: rgba(255,255,255,0.025);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 3px;
+    }
+
+    .stat-label {
+        color: #8195ad;
+        font-size: 0.85rem;
+    }
+
+    /* Sections */
+    section {
+        padding: 100px 7%;
+        max-width: 1350px;
+        margin: auto;
+    }
+
+    .section-heading {
+        max-width: 700px;
+        margin-bottom: 50px;
+    }
+
+    .eyebrow {
+        color: #69c9ff;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    h2 {
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        line-height: 1.1;
+        margin-bottom: 15px;
+        letter-spacing: -2px;
+    }
+
+    .section-heading p {
+        color: #899cb4;
+    }
+
+    /* Cards */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .card {
+        padding: 30px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.025);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-7px);
+        border-color: rgba(105,201,255,0.3);
+        background: rgba(255,255,255,0.045);
+    }
+
+    .card-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: rgba(105,201,255,0.09);
+        border: 1px solid rgba(105,201,255,0.15);
+        font-size: 1.5rem;
+        margin-bottom: 22px;
+    }
+
+    .card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        color: #8396ad;
+        font-size: 0.92rem;
+    }
+
+    /* Pipeline */
+    .pipeline {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        align-items: center;
+    }
+
+    .pipeline-step {
+        position: relative;
+        text-align: center;
+        padding: 25px 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 15px;
+        background: rgba(255,255,255,0.025);
+    }
+
+    .pipeline-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -21px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4e667f;
+        font-size: 1.4rem;
+    }
+
+    .pipeline-icon {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .pipeline-step strong {
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    .pipeline-step span {
+        color: #73869e;
+        font-size: 0.75rem;
+    }
+
+    /* Architecture */
+    .architecture {
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 35px;
+        background: rgba(255,255,255,0.025);
+        overflow-x: auto;
+    }
+
+    .architecture-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        min-width: 850px;
+    }
+
+    .architecture-box {
+        min-width: 150px;
+        padding: 22px;
+        text-align: center;
+        border-radius: 14px;
+        border: 1px solid rgba(105,201,255,0.16);
+        background: rgba(105,201,255,0.045);
+    }
+
+    .architecture-box strong {
+        display: block;
+        margin-top: 8px;
+    }
+
+    .architecture-box small {
+        color: #7489a1;
+    }
+
+    .arrow {
+        color: #55718c;
+        font-size: 1.4rem;
+    }
+
+    /* CTA */
+    .cta {
+        margin-top: 50px;
+        text-align: center;
+        padding: 80px 30px;
+        border-radius: 25px;
+        border: 1px solid rgba(105,201,255,0.14);
+        background:
+            radial-gradient(circle at center, rgba(0,145,255,0.12), transparent 55%),
+            rgba(255,255,255,0.025);
+    }
+
+    .cta p {
+        color: #8da0b8;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+
+    /* Footer */
+    footer {
+        border-top: 1px solid rgba(255,255,255,0.08);
+        padding: 35px 7%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #687d96;
+        font-size: 0.85rem;
+    }
+
+    footer strong {
+        color: #a7bad0;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+        .hero {
+            grid-template-columns: 1fr;
+            padding-top: 130px;
+        }
+
+        .terminal {
+            transform: none;
+        }
+
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .pipeline {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .pipeline-step:not(:last-child)::after {
+            display: none;
+        }
+    }
+
+    @media (max-width: 650px) {
+        nav {
+            padding: 15px 5%;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .hero {
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        h1 {
+            letter-spacing: -3px;
+        }
+
+        section {
+            padding: 70px 5%;
+        }
+
+        .stats,
+        .cards,
+        .pipeline {
+            grid-template-columns: 1fr;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        .stats {
+            margin-top: 0;
+        }
+
+        .pipeline {
+            padding: 0;
+        }
+
+        footer {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="background">
+    <div class="grid"></div>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+</div>
+
+<!-- Navigation -->
+
+<nav>
+    <a href="#" class="logo">
+        <div class="logo-icon">⚡</div>
+        DevOps<span>Lab</span>
+    </a>
+
+```
+<ul class="nav-links">
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+</ul>
+
+<a href="#deploy" class="nav-button">Deploy →</a>
+```
+
+</nav>
+
+<!-- Hero -->
+
+<main class="hero">
+
+```
+<div>
+    <div class="badge">
+        <span class="status-dot"></span>
+        CI/CD Pipeline Operational
+    </div>
+
+    <h1>
+        Build.<br>
+        <span class="gradient-text">Deploy.</span><br>
+        Scale.
+    </h1>
+
+    <p class="hero-description">
+        A modern DevOps environment powered by GitHub, Jenkins,
+        Docker and AWS. Automate your software delivery from code
+        commit to production deployment.
+    </p>
+
+    <div class="buttons">
+        <a href="#pipeline" class="primary-button">Explore Pipeline →</a>
+        <a href="#architecture" class="secondary-button">View Architecture</a>
+    </div>
+</div>
+
+<!-- Terminal -->
+<div class="terminal">
+
+    <div class="terminal-header">
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-title">devops@ec2-server ~</span>
+    </div>
+
+    <div class="terminal-body">
+
+        <div class="line">
+            <span class="prompt">devops@ec2:~$</span>
+            <span class="command"> git push origin main</span>
+        </div>
+
+        <div class="line">
+            <span class="blue">✓</span>
+            Changes pushed to GitHub
+        </div>
+
+        <div class="line">
+            <span class="purple">→</span>
+            Webhook received by Jenkins
+        </div>
+
+        <div class="line">
+            <span class="blue">→</span>
+            Checking out latest source...
+        </div>
+
+        <div class="line">
+            <span class="blue">→</span>
+            docker build -t devopslab:latest
+        </div>
+
+        <div class="line">
+            <span class="green">✓</span>
+            Docker image created successfully
+        </div>
+
+        <div class="line">
+            <span class="green">✓</span>
+            Container deployed on EC2
+        </div>
+
+        <div class="line">
+            <span class="prompt">devops@ec2:~$</span>
+            <span class="cursor"></span>
+        </div>
+
+    </div>
+</div>
+```
+
+</main>
+
+<!-- Stats -->
+
+<div class="stats">
+
+```
+<div class="stat">
+    <div class="stat-number">24/7</div>
+    <div class="stat-label">Infrastructure Ready</div>
+</div>
+
+<div class="stat">
+    <div class="stat-number">100%</div>
+    <div class="stat-label">Automated Deployment</div>
+</div>
+
+<div class="stat">
+    <div class="stat-number">CI/CD</div>
+    <div class="stat-label">Continuous Delivery</div>
+</div>
+
+<div class="stat">
+    <div class="stat-number">AWS</div>
+    <div class="stat-label">Cloud Infrastructure</div>
+</div>
+```
+
+</div>
+
+<!-- Platform -->
+
+<section id="platform">
+
+```
+<div class="section-heading">
+    <div class="eyebrow">The Platform</div>
+    <h2>Everything connected.<br><span class="gradient-text">Nothing manual.</span></h2>
+    <p>
+        A practical DevOps environment designed around automation,
+        repeatability and fast software delivery.
+    </p>
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <div class="card-icon">🐙</div>
+        <h3>GitHub</h3>
+        <p>
+            Source control and collaboration. Every code change
+            becomes part of an automated delivery workflow.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>Jenkins</h3>
+        <p>
+            Continuous integration automatically builds and
+            deploys applications after source changes.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🐳</div>
+        <h3>Docker</h3>
+        <p>
+            Package applications into portable containers that
+            behave consistently across environments.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">☁️</div>
+        <h3>AWS</h3>
+        <p>
+            Cloud infrastructure provides the compute resources
+            required to run the application.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>Automation</h3>
+        <p>
+            Reduce repetitive work by turning code changes into
+            predictable deployment workflows.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>Scalability</h3>
+        <p>
+            The architecture can evolve toward Kubernetes,
+            registries and advanced cloud infrastructure.
+        </p>
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Pipeline -->
+
+<section id="pipeline">
+
+```
+<div class="section-heading">
+    <div class="eyebrow">CI/CD Pipeline</div>
+    <h2>From commit to <span class="gradient-text">container.</span></h2>
+    <p>
+        A push to GitHub can trigger the entire deployment process.
+    </p>
+</div>
+
+<div class="pipeline">
+
+    <div class="pipeline-step">
+        <div class="pipeline-icon">👨‍💻</div>
+        <strong>Developer</strong>
+        <span>git push</span>
+    </div>
+
+    <div class="pipeline-step">
+        <div class="pipeline-icon">🐙</div>
+        <strong>GitHub</strong>
+        <span>Source Code</span>
+    </div>
+
+    <div class="pipeline-step">
+        <div class="pipeline-icon">⚙️</div>
+        <strong>Jenkins</strong>
+        <span>CI/CD</span>
+    </div>
+
+    <div class="pipeline-step">
+        <div class="pipeline-icon">🐳</div>
+        <strong>Docker</strong>
+        <span>Build Image</span>
+    </div>
+
+    <div class="pipeline-step">
+        <div class="pipeline-icon">☁️</div>
+        <strong>AWS EC2</strong>
+        <span>Run Container</span>
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Architecture -->
+
+<section id="architecture">
+
+```
+<div class="section-heading">
+    <div class="eyebrow">Architecture</div>
+    <h2>A simple foundation for a <span class="gradient-text">real pipeline.</span></h2>
+    <p>
+        This lab starts simple and can later grow into a production-style
+        DevOps architecture.
+    </p>
+</div>
+
+<div class="architecture">
+
+    <div class="architecture-row">
+
+        <div class="architecture-box">
+            <div>🐙</div>
+            <strong>GitHub</strong>
+            <small>Repository</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+            <div>🔔</div>
+            <strong>Webhook</strong>
+            <small>Trigger</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+            <div>⚙️</div>
+            <strong>Jenkins</strong>
+            <small>Pipeline</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+            <div>🐳</div>
+            <strong>Docker</strong>
+            <small>Container</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+            <div>☁️</div>
+            <strong>EC2</strong>
+            <small>Production</small>
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Future -->
+
+<section>
+
+```
+<div class="section-heading">
+    <div class="eyebrow">What's Next</div>
+    <h2>The pipeline can <span class="gradient-text">evolve.</span></h2>
+    <p>
+        Once the foundation works, additional DevOps technologies
+        can be introduced without changing the core workflow.
+    </p>
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>SonarQube</h3>
+        <p>Automated code quality and static analysis.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>Nexus / ECR</h3>
+        <p>Store and manage application artifacts and container images.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">☸️</div>
+        <h3>Kubernetes</h3>
+        <p>Move from a single container to orchestrated workloads.</p>
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- CTA -->
+
+<section id="deploy">
+
+```
+<div class="cta">
+
+    <div class="eyebrow">Deployment Ready</div>
+
+    <h2>
+        Code in.
+        <span class="gradient-text">Production out.</span>
+    </h2>
+
+    <p>
+        This website is running as a containerized application.
+        Change the code, push it to GitHub and let the pipeline
+        handle the rest.
+    </p>
+
+    <a href="#pipeline" class="primary-button">
+        View Deployment Flow →
+    </a>
+
+</div>
+```
+
+</section>
+
+<!-- Footer -->
+
+<footer>
+    <div>
+        <strong>⚡ DevOpsLab</strong> — Build • Deploy • Scale
+    </div>
+
+```
+<div>
+    CI/CD Demo • AWS • Docker • Jenkins
+</div>
+```
+
+</footer>
+
+</body>
+</html>
