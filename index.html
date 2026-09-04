@@ -1,1020 +1,913 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DevOpsLab - Modern CI/CD and Cloud Infrastructure Platform">
-    <title>DevOpsLab | Build • Deploy • Scale</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
+<title>DevOpsLab // Command Center</title>
+
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    html {
-        scroll-behavior: smooth;
-    }
+html {
+    scroll-behavior: smooth;
+}
 
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #07111f;
-        color: #e8f0ff;
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
+body {
+    font-family: "Courier New", monospace;
+    background: #02040a;
+    color: #e8faff;
+    overflow-x: hidden;
+}
 
-    a {
-        color: inherit;
-        text-decoration: none;
-    }
+/* ---------- BACKGROUND ---------- */
 
-    /* Background */
-    .background {
-        position: fixed;
-        inset: 0;
-        z-index: -2;
-        overflow: hidden;
-        background:
-            radial-gradient(circle at 15% 20%, rgba(0, 153, 255, 0.16), transparent 28%),
-            radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.14), transparent 30%),
-            radial-gradient(circle at 50% 90%, rgba(0, 255, 170, 0.08), transparent 30%),
-            #07111f;
-    }
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(rgba(0,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,255,0.035) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 15s linear infinite;
+    pointer-events: none;
+    z-index: -2;
+}
 
-    .grid {
-        position: absolute;
-        inset: 0;
-        opacity: 0.16;
-        background-image:
-            linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
-        background-size: 50px 50px;
-        mask-image: linear-gradient(to bottom, black, transparent 90%);
-    }
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,255,.12), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(140,0,255,.12), transparent 30%);
+    pointer-events: none;
+    z-index: -3;
+}
 
-    .orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(70px);
-        opacity: 0.25;
+@keyframes gridMove {
+    from {
+        background-position: 0 0;
     }
-
-    .orb.one {
-        width: 300px;
-        height: 300px;
-        background: #008cff;
-        top: 10%;
-        left: -100px;
+    to {
+        background-position: 50px 50px;
     }
+}
 
-    .orb.two {
-        width: 350px;
-        height: 350px;
-        background: #7c3aed;
-        right: -130px;
-        top: 25%;
-    }
+/* ---------- PARTICLES ---------- */
 
-    /* Navigation */
-    nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-        padding: 18px 7%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(7, 17, 31, 0.72);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
+.particle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: #00ffff;
+    border-radius: 50%;
+    opacity: .6;
+    animation: float 8s infinite ease-in-out;
+    pointer-events: none;
+    z-index: -1;
+}
 
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 1.3rem;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-    }
+.p1 { left: 10%; top: 30%; animation-delay: 0s; }
+.p2 { left: 30%; top: 70%; animation-delay: 2s; }
+.p3 { left: 55%; top: 20%; animation-delay: 4s; }
+.p4 { left: 75%; top: 60%; animation-delay: 1s; }
+.p5 { left: 90%; top: 25%; animation-delay: 3s; }
 
-    .logo-icon {
-        width: 36px;
-        height: 36px;
-        display: grid;
-        place-items: center;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #00aaff, #7c3aed);
-        box-shadow: 0 0 25px rgba(0,170,255,0.35);
-    }
+@keyframes float {
+    0%,100% { transform: translateY(0) scale(1); opacity:.2; }
+    50% { transform: translateY(-80px) scale(2); opacity:1; }
+}
 
-    .logo span {
-        color: #69c9ff;
-    }
+/* ---------- NAV ---------- */
 
-    .nav-links {
-        display: flex;
-        gap: 30px;
-        list-style: none;
-        color: #aabbd1;
-        font-size: 0.95rem;
-    }
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(15px);
+    background: rgba(2,4,10,.65);
+    border-bottom: 1px solid rgba(0,255,255,.15);
+}
 
-    .nav-links a {
-        transition: 0.25s;
-    }
+.logo {
+    color: #00ffff;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px #00ffff;
+}
 
-    .nav-links a:hover {
-        color: #69c9ff;
-    }
+.logo span {
+    color: white;
+}
 
-    .nav-button {
-        padding: 10px 18px;
-        border: 1px solid rgba(105,201,255,0.45);
-        border-radius: 10px;
-        color: #fff;
-        transition: 0.25s;
-    }
+nav a {
+    color: #8ea9b5;
+    text-decoration: none;
+    margin-left: 25px;
+    font-size: 13px;
+    transition: .3s;
+}
 
-    .nav-button:hover {
-        background: rgba(105,201,255,0.12);
-        transform: translateY(-2px);
-    }
+nav a:hover {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
 
-    /* Hero */
+/* ---------- HERO ---------- */
+
+.hero {
+    min-height: 100vh;
+    padding: 150px 7% 80px;
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 15px;
+    border: 1px solid rgba(0,255,255,.4);
+    border-radius: 30px;
+    color: #00ffff;
+    font-size: 12px;
+    letter-spacing: 2px;
+    background: rgba(0,255,255,.04);
+    box-shadow: 0 0 20px rgba(0,255,255,.1);
+}
+
+.hero h1 {
+    margin-top: 25px;
+    font-family: Arial, sans-serif;
+    font-size: clamp(50px, 7vw, 100px);
+    line-height: .95;
+    letter-spacing: -5px;
+}
+
+.hero h1 span {
+    color: #00ffff;
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 40px rgba(0,255,255,.5);
+}
+
+.hero p {
+    margin-top: 30px;
+    max-width: 650px;
+    color: #91aab5;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.buttons {
+    margin-top: 35px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+button,
+.btn {
+    padding: 14px 22px;
+    border-radius: 5px;
+    border: 1px solid #00ffff;
+    background: rgba(0,255,255,.05);
+    color: #00ffff;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: .3s;
+}
+
+button:hover,
+.btn:hover {
+    background: #00ffff;
+    color: #02040a;
+    box-shadow: 0 0 30px rgba(0,255,255,.6);
+    transform: translateY(-3px);
+}
+
+/* ---------- HOLOGRAM ---------- */
+
+.hologram {
+    height: 430px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.core {
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    border: 1px solid #00ffff;
+    box-shadow:
+        0 0 30px #00ffff,
+        inset 0 0 40px rgba(0,255,255,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 3s infinite ease-in-out;
+}
+
+.core::before,
+.core::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,255,255,.5);
+}
+
+.core::before {
+    width: 320px;
+    height: 320px;
+    animation: spin 12s linear infinite;
+}
+
+.core::after {
+    width: 390px;
+    height: 390px;
+    border-color: rgba(160,0,255,.35);
+    animation: spinReverse 18s linear infinite;
+}
+
+.core-text {
+    text-align: center;
+    z-index: 2;
+}
+
+.core-text strong {
+    display: block;
+    font-family: Arial;
+    font-size: 35px;
+    color: #fff;
+}
+
+.core-text small {
+    color: #00ffff;
+}
+
+@keyframes pulse {
+    50% { transform: scale(1.08); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+    to { transform: rotate(-360deg); }
+}
+
+/* ---------- WELCOME ---------- */
+
+.welcome {
+    text-align: center;
+    padding: 70px 20px;
+}
+
+.welcome h2 {
+    font-family: Arial;
+    font-size: 42px;
+}
+
+.welcome h2 span {
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+}
+
+.welcome p {
+    margin-top: 15px;
+    color: #8299a5;
+}
+
+/* ---------- SECTION ---------- */
+
+section {
+    padding: 100px 7%;
+}
+
+.section-title {
+    margin-bottom: 50px;
+}
+
+.section-title small {
+    color: #00ffff;
+    letter-spacing: 3px;
+}
+
+.section-title h2 {
+    font-family: Arial;
+    font-size: 48px;
+    margin-top: 10px;
+}
+
+/* ---------- CARDS ---------- */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    padding: 28px;
+    min-height: 200px;
+    border: 1px solid rgba(0,255,255,.15);
+    background: rgba(255,255,255,.025);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    transition: .4s;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: #00ffff;
+    box-shadow: 0 0 35px rgba(0,255,255,.12);
+}
+
+.icon {
+    font-size: 35px;
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.card p {
+    color: #8299a5;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+/* ---------- TERMINAL ---------- */
+
+.terminal {
+    max-width: 1000px;
+    margin: auto;
+    background: #010205;
+    border: 1px solid rgba(0,255,255,.25);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0,255,255,.08);
+}
+
+.terminal-header {
+    padding: 13px 18px;
+    background: rgba(255,255,255,.04);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    color: #71858f;
+}
+
+.dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #59666d;
+    margin-right: 6px;
+}
+
+.terminal-body {
+    padding: 30px;
+    min-height: 350px;
+    color: #00ff9d;
+    line-height: 2;
+    font-size: 14px;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: #00ff9d;
+    animation: blink .8s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* ---------- PIPELINE ---------- */
+
+.pipeline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.node {
+    width: 180px;
+    padding: 25px 15px;
+    text-align: center;
+    border: 1px solid rgba(0,255,255,.25);
+    border-radius: 10px;
+    background: rgba(255,255,255,.025);
+    transition: .3s;
+}
+
+.node:hover {
+    border-color: #00ffff;
+    box-shadow: 0 0 25px rgba(0,255,255,.2);
+    transform: scale(1.05);
+}
+
+.node-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.node strong {
+    display: block;
+    color: white;
+}
+
+.node small {
+    color: #00ffff;
+}
+
+.arrow {
+    color: #00ffff;
+    font-size: 25px;
+    animation: arrowPulse 1.5s infinite;
+}
+
+@keyframes arrowPulse {
+    50% { opacity: .2; transform: translateX(5px); }
+}
+
+/* ---------- STATUS ---------- */
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.status-card {
+    padding: 25px;
+    border-left: 3px solid #00ff9d;
+    background: rgba(0,255,150,.03);
+}
+
+.status-card h3 {
+    color: #00ff9d;
+    font-size: 13px;
+}
+
+.status-card strong {
+    display: block;
+    margin-top: 10px;
+    font-family: Arial;
+    font-size: 25px;
+}
+
+/* ---------- FOOTER ---------- */
+
+footer {
+    padding: 40px 7%;
+    border-top: 1px solid rgba(0,255,255,.1);
+    color: #566b75;
+    text-align: center;
+    font-size: 12px;
+}
+
+footer span {
+    color: #00ffff;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media(max-width:900px) {
+
     .hero {
-        min-height: 100vh;
-        padding: 150px 7% 90px;
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        align-items: center;
-        gap: 70px;
-        max-width: 1450px;
-        margin: auto;
+        grid-template-columns: 1fr;
     }
 
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 14px;
-        border: 1px solid rgba(105,201,255,0.25);
-        border-radius: 999px;
-        background: rgba(105,201,255,0.06);
-        color: #82d5ff;
-        font-size: 0.82rem;
-        margin-bottom: 25px;
+    .cards,
+    .status-grid {
+        grid-template-columns: repeat(2,1fr);
     }
 
-    .status-dot {
-        width: 8px;
-        height: 8px;
-        background: #35e68a;
-        border-radius: 50%;
-        box-shadow: 0 0 12px #35e68a;
+    nav a {
+        display: none;
+    }
+}
+
+@media(max-width:550px) {
+
+    .cards,
+    .status-grid {
+        grid-template-columns: 1fr;
     }
 
-    h1 {
-        font-size: clamp(3.2rem, 7vw, 6.4rem);
-        line-height: 0.95;
-        letter-spacing: -5px;
-        margin-bottom: 28px;
+    .hero h1 {
+        font-size: 55px;
     }
 
-    .gradient-text {
-        background: linear-gradient(90deg, #69c9ff, #9d7aff, #63f3c0);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+    .section-title h2 {
+        font-size: 36px;
     }
 
-    .hero-description {
-        max-width: 650px;
-        color: #9db0c8;
-        font-size: 1.1rem;
-        margin-bottom: 35px;
+    .hologram {
+        transform: scale(.75);
     }
-
-    .buttons {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .primary-button,
-    .secondary-button {
-        padding: 14px 22px;
-        border-radius: 11px;
-        font-weight: 700;
-        transition: 0.25s;
-    }
-
-    .primary-button {
-        background: linear-gradient(135deg, #0799ff, #7254e8);
-        box-shadow: 0 10px 35px rgba(36,139,255,0.22);
-    }
-
-    .secondary-button {
-        border: 1px solid rgba(255,255,255,0.13);
-        background: rgba(255,255,255,0.035);
-    }
-
-    .primary-button:hover,
-    .secondary-button:hover {
-        transform: translateY(-3px);
-    }
-
-    /* Terminal */
-    .terminal {
-        border: 1px solid rgba(255,255,255,0.12);
-        background: rgba(5,12,23,0.82);
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow:
-            0 30px 100px rgba(0,0,0,0.45),
-            0 0 70px rgba(0,145,255,0.08);
-        transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
-    }
-
-    .terminal-header {
-        padding: 14px 18px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.025);
-    }
-
-    .terminal-dot {
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-    }
-
-    .terminal-title {
-        margin-left: 8px;
-        color: #74869d;
-        font-size: 0.8rem;
-    }
-
-    .terminal-body {
-        padding: 25px;
-        font-family: Consolas, monospace;
-        font-size: 0.9rem;
-        color: #a9c0d8;
-    }
-
-    .line {
-        margin-bottom: 12px;
-    }
-
-    .prompt {
-        color: #63f3c0;
-    }
-
-    .command {
-        color: #fff;
-    }
-
-    .blue {
-        color: #69c9ff;
-    }
-
-    .purple {
-        color: #a98cff;
-    }
-
-    .green {
-        color: #63f3c0;
-    }
-
-    .cursor {
-        display: inline-block;
-        width: 8px;
-        height: 16px;
-        background: #69c9ff;
-        vertical-align: middle;
-        animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-        50% { opacity: 0; }
-    }
-
-    /* Stats */
-    .stats {
-        max-width: 1250px;
-        margin: -20px auto 80px;
-        padding: 0 7%;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-    }
-
-    .stat {
-        padding: 25px;
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 15px;
-        background: rgba(255,255,255,0.025);
-    }
-
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 3px;
-    }
-
-    .stat-label {
-        color: #8195ad;
-        font-size: 0.85rem;
-    }
-
-    /* Sections */
-    section {
-        padding: 100px 7%;
-        max-width: 1350px;
-        margin: auto;
-    }
-
-    .section-heading {
-        max-width: 700px;
-        margin-bottom: 50px;
-    }
-
-    .eyebrow {
-        color: #69c9ff;
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 800;
-        margin-bottom: 12px;
-    }
-
-    h2 {
-        font-size: clamp(2.2rem, 4vw, 3.5rem);
-        line-height: 1.1;
-        margin-bottom: 15px;
-        letter-spacing: -2px;
-    }
-
-    .section-heading p {
-        color: #899cb4;
-    }
-
-    /* Cards */
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .card {
-        padding: 30px;
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 18px;
-        background: rgba(255,255,255,0.025);
-        transition: 0.3s;
-    }
-
-    .card:hover {
-        transform: translateY(-7px);
-        border-color: rgba(105,201,255,0.3);
-        background: rgba(255,255,255,0.045);
-    }
-
-    .card-icon {
-        width: 52px;
-        height: 52px;
-        display: grid;
-        place-items: center;
-        border-radius: 14px;
-        background: rgba(105,201,255,0.09);
-        border: 1px solid rgba(105,201,255,0.15);
-        font-size: 1.5rem;
-        margin-bottom: 22px;
-    }
-
-    .card h3 {
-        font-size: 1.25rem;
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        color: #8396ad;
-        font-size: 0.92rem;
-    }
-
-    /* Pipeline */
-    .pipeline {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 12px;
-        align-items: center;
-    }
-
-    .pipeline-step {
-        position: relative;
-        text-align: center;
-        padding: 25px 12px;
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 15px;
-        background: rgba(255,255,255,0.025);
-    }
-
-    .pipeline-step:not(:last-child)::after {
-        content: "→";
-        position: absolute;
-        right: -21px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #4e667f;
-        font-size: 1.4rem;
-    }
-
-    .pipeline-icon {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-    }
-
-    .pipeline-step strong {
-        display: block;
-        font-size: 0.9rem;
-    }
-
-    .pipeline-step span {
-        color: #73869e;
-        font-size: 0.75rem;
-    }
-
-    /* Architecture */
-    .architecture {
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 20px;
-        padding: 35px;
-        background: rgba(255,255,255,0.025);
-        overflow-x: auto;
-    }
-
-    .architecture-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 18px;
-        min-width: 850px;
-    }
-
-    .architecture-box {
-        min-width: 150px;
-        padding: 22px;
-        text-align: center;
-        border-radius: 14px;
-        border: 1px solid rgba(105,201,255,0.16);
-        background: rgba(105,201,255,0.045);
-    }
-
-    .architecture-box strong {
-        display: block;
-        margin-top: 8px;
-    }
-
-    .architecture-box small {
-        color: #7489a1;
-    }
-
-    .arrow {
-        color: #55718c;
-        font-size: 1.4rem;
-    }
-
-    /* CTA */
-    .cta {
-        margin-top: 50px;
-        text-align: center;
-        padding: 80px 30px;
-        border-radius: 25px;
-        border: 1px solid rgba(105,201,255,0.14);
-        background:
-            radial-gradient(circle at center, rgba(0,145,255,0.12), transparent 55%),
-            rgba(255,255,255,0.025);
-    }
-
-    .cta p {
-        color: #8da0b8;
-        max-width: 600px;
-        margin: 0 auto 30px;
-    }
-
-    /* Footer */
-    footer {
-        border-top: 1px solid rgba(255,255,255,0.08);
-        padding: 35px 7%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: #687d96;
-        font-size: 0.85rem;
-    }
-
-    footer strong {
-        color: #a7bad0;
-    }
-
-    /* Responsive */
-    @media (max-width: 1000px) {
-        .hero {
-            grid-template-columns: 1fr;
-            padding-top: 130px;
-        }
-
-        .terminal {
-            transform: none;
-        }
-
-        .stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .cards {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .pipeline {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .pipeline-step:not(:last-child)::after {
-            display: none;
-        }
-    }
-
-    @media (max-width: 650px) {
-        nav {
-            padding: 15px 5%;
-        }
-
-        .nav-links {
-            display: none;
-        }
-
-        .hero {
-            padding-left: 5%;
-            padding-right: 5%;
-        }
-
-        h1 {
-            letter-spacing: -3px;
-        }
-
-        section {
-            padding: 70px 5%;
-        }
-
-        .stats,
-        .cards,
-        .pipeline {
-            grid-template-columns: 1fr;
-            padding-left: 5%;
-            padding-right: 5%;
-        }
-
-        .stats {
-            margin-top: 0;
-        }
-
-        .pipeline {
-            padding: 0;
-        }
-
-        footer {
-            flex-direction: column;
-            gap: 10px;
-            text-align: center;
-        }
-    }
+}
 </style>
-```
-
 </head>
 
 <body>
 
-<div class="background">
-    <div class="grid"></div>
-    <div class="orb one"></div>
-    <div class="orb two"></div>
-</div>
-
-<!-- Navigation -->
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+<div class="particle p5"></div>
 
 <nav>
-    <a href="#" class="logo">
-        <div class="logo-icon">⚡</div>
-        DevOps<span>Lab</span>
-    </a>
+    <div class="logo">⚡ DEVOPS<span>LAB</span></div>
 
-```
-<ul class="nav-links">
-    <li><a href="#platform">Platform</a></li>
-    <li><a href="#pipeline">Pipeline</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-</ul>
-
-<a href="#deploy" class="nav-button">Deploy →</a>
-```
-
+    <div>
+        <a href="#platform">PLATFORM</a>
+        <a href="#pipeline">PIPELINE</a>
+        <a href="#terminal">TERMINAL</a>
+        <a href="#status">STATUS</a>
+    </div>
 </nav>
 
-<!-- Hero -->
+<!-- HERO -->
 
-<main class="hero">
+<header class="hero">
 
-```
-<div>
-    <div class="badge">
-        <span class="status-dot"></span>
-        CI/CD Pipeline Operational
-    </div>
+    <div>
 
-    <h1>
-        Build.<br>
-        <span class="gradient-text">Deploy.</span><br>
-        Scale.
-    </h1>
-
-    <p class="hero-description">
-        A modern DevOps environment powered by GitHub, Jenkins,
-        Docker and AWS. Automate your software delivery from code
-        commit to production deployment.
-    </p>
-
-    <div class="buttons">
-        <a href="#pipeline" class="primary-button">Explore Pipeline →</a>
-        <a href="#architecture" class="secondary-button">View Architecture</a>
-    </div>
-</div>
-
-<!-- Terminal -->
-<div class="terminal">
-
-    <div class="terminal-header">
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="terminal-title">devops@ec2-server ~</span>
-    </div>
-
-    <div class="terminal-body">
-
-        <div class="line">
-            <span class="prompt">devops@ec2:~$</span>
-            <span class="command"> git push origin main</span>
+        <div class="status">
+            ● SYSTEM ONLINE
         </div>
 
-        <div class="line">
-            <span class="blue">✓</span>
-            Changes pushed to GitHub
-        </div>
+        <h1>
+            BUILD.<br>
+            <span>DEPLOY.</span><br>
+            SCALE.
+        </h1>
 
-        <div class="line">
-            <span class="purple">→</span>
-            Webhook received by Jenkins
-        </div>
-
-        <div class="line">
-            <span class="blue">→</span>
-            Checking out latest source...
-        </div>
-
-        <div class="line">
-            <span class="blue">→</span>
-            docker build -t devopslab:latest
-        </div>
-
-        <div class="line">
-            <span class="green">✓</span>
-            Docker image created successfully
-        </div>
-
-        <div class="line">
-            <span class="green">✓</span>
-            Container deployed on EC2
-        </div>
-
-        <div class="line">
-            <span class="prompt">devops@ec2:~$</span>
-            <span class="cursor"></span>
-        </div>
-
-    </div>
-</div>
-```
-
-</main>
-
-<!-- Stats -->
-
-<div class="stats">
-
-```
-<div class="stat">
-    <div class="stat-number">24/7</div>
-    <div class="stat-label">Infrastructure Ready</div>
-</div>
-
-<div class="stat">
-    <div class="stat-number">100%</div>
-    <div class="stat-label">Automated Deployment</div>
-</div>
-
-<div class="stat">
-    <div class="stat-number">CI/CD</div>
-    <div class="stat-label">Continuous Delivery</div>
-</div>
-
-<div class="stat">
-    <div class="stat-number">AWS</div>
-    <div class="stat-label">Cloud Infrastructure</div>
-</div>
-```
-
-</div>
-
-<!-- Platform -->
-
-<section id="platform">
-
-```
-<div class="section-heading">
-    <div class="eyebrow">The Platform</div>
-    <h2>Everything connected.<br><span class="gradient-text">Nothing manual.</span></h2>
-    <p>
-        A practical DevOps environment designed around automation,
-        repeatability and fast software delivery.
-    </p>
-</div>
-
-<div class="cards">
-
-    <div class="card">
-        <div class="card-icon">🐙</div>
-        <h3>GitHub</h3>
         <p>
-            Source control and collaboration. Every code change
-            becomes part of an automated delivery workflow.
+            Welcome to a futuristic DevOps command center powered by
+            GitHub, Jenkins, Docker and AWS.
+            Automate software delivery from source code to production.
         </p>
-    </div>
 
-    <div class="card">
-        <div class="card-icon">⚙️</div>
-        <h3>Jenkins</h3>
-        <p>
-            Continuous integration automatically builds and
-            deploys applications after source changes.
-        </p>
-    </div>
+        <div class="buttons">
+            <a class="btn" href="#pipeline">EXPLORE PIPELINE →</a>
 
-    <div class="card">
-        <div class="card-icon">🐳</div>
-        <h3>Docker</h3>
-        <p>
-            Package applications into portable containers that
-            behave consistently across environments.
-        </p>
-    </div>
-
-    <div class="card">
-        <div class="card-icon">☁️</div>
-        <h3>AWS</h3>
-        <p>
-            Cloud infrastructure provides the compute resources
-            required to run the application.
-        </p>
-    </div>
-
-    <div class="card">
-        <div class="card-icon">🔄</div>
-        <h3>Automation</h3>
-        <p>
-            Reduce repetitive work by turning code changes into
-            predictable deployment workflows.
-        </p>
-    </div>
-
-    <div class="card">
-        <div class="card-icon">📈</div>
-        <h3>Scalability</h3>
-        <p>
-            The architecture can evolve toward Kubernetes,
-            registries and advanced cloud infrastructure.
-        </p>
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Pipeline -->
-
-<section id="pipeline">
-
-```
-<div class="section-heading">
-    <div class="eyebrow">CI/CD Pipeline</div>
-    <h2>From commit to <span class="gradient-text">container.</span></h2>
-    <p>
-        A push to GitHub can trigger the entire deployment process.
-    </p>
-</div>
-
-<div class="pipeline">
-
-    <div class="pipeline-step">
-        <div class="pipeline-icon">👨‍💻</div>
-        <strong>Developer</strong>
-        <span>git push</span>
-    </div>
-
-    <div class="pipeline-step">
-        <div class="pipeline-icon">🐙</div>
-        <strong>GitHub</strong>
-        <span>Source Code</span>
-    </div>
-
-    <div class="pipeline-step">
-        <div class="pipeline-icon">⚙️</div>
-        <strong>Jenkins</strong>
-        <span>CI/CD</span>
-    </div>
-
-    <div class="pipeline-step">
-        <div class="pipeline-icon">🐳</div>
-        <strong>Docker</strong>
-        <span>Build Image</span>
-    </div>
-
-    <div class="pipeline-step">
-        <div class="pipeline-icon">☁️</div>
-        <strong>AWS EC2</strong>
-        <span>Run Container</span>
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Architecture -->
-
-<section id="architecture">
-
-```
-<div class="section-heading">
-    <div class="eyebrow">Architecture</div>
-    <h2>A simple foundation for a <span class="gradient-text">real pipeline.</span></h2>
-    <p>
-        This lab starts simple and can later grow into a production-style
-        DevOps architecture.
-    </p>
-</div>
-
-<div class="architecture">
-
-    <div class="architecture-row">
-
-        <div class="architecture-box">
-            <div>🐙</div>
-            <strong>GitHub</strong>
-            <small>Repository</small>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="architecture-box">
-            <div>🔔</div>
-            <strong>Webhook</strong>
-            <small>Trigger</small>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="architecture-box">
-            <div>⚙️</div>
-            <strong>Jenkins</strong>
-            <small>Pipeline</small>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="architecture-box">
-            <div>🐳</div>
-            <strong>Docker</strong>
-            <small>Container</small>
-        </div>
-
-        <div class="arrow">→</div>
-
-        <div class="architecture-box">
-            <div>☁️</div>
-            <strong>EC2</strong>
-            <small>Production</small>
+            <button onclick="welcomeUser()">
+                🔊 PLAY WELCOME
+            </button>
         </div>
 
     </div>
 
-</div>
-```
+    <div class="hologram">
 
-</section>
+        <div class="core">
 
-<!-- Future -->
+            <div class="core-text">
+                <strong>ONLINE</strong>
+                <small>DEVOPS CORE</small>
+            </div>
 
-<section>
+        </div>
 
-```
-<div class="section-heading">
-    <div class="eyebrow">What's Next</div>
-    <h2>The pipeline can <span class="gradient-text">evolve.</span></h2>
-    <p>
-        Once the foundation works, additional DevOps technologies
-        can be introduced without changing the core workflow.
-    </p>
-</div>
-
-<div class="cards">
-
-    <div class="card">
-        <div class="card-icon">🔍</div>
-        <h3>SonarQube</h3>
-        <p>Automated code quality and static analysis.</p>
     </div>
 
-    <div class="card">
-        <div class="card-icon">📦</div>
-        <h3>Nexus / ECR</h3>
-        <p>Store and manage application artifacts and container images.</p>
-    </div>
+</header>
 
-    <div class="card">
-        <div class="card-icon">☸️</div>
-        <h3>Kubernetes</h3>
-        <p>Move from a single container to orchestrated workloads.</p>
-    </div>
+<!-- WELCOME -->
 
-</div>
-```
-
-</section>
-
-<!-- CTA -->
-
-<section id="deploy">
-
-```
-<div class="cta">
-
-    <div class="eyebrow">Deployment Ready</div>
+<div class="welcome">
 
     <h2>
-        Code in.
-        <span class="gradient-text">Production out.</span>
+        Welcome, <span>Asim Khan</span> 👋
     </h2>
 
     <p>
-        This website is running as a containerized application.
-        Change the code, push it to GitHub and let the pipeline
-        handle the rest.
+        Your cloud infrastructure is online.
+        Your deployment system is ready.
     </p>
 
-    <a href="#pipeline" class="primary-button">
-        View Deployment Flow →
-    </a>
+    <button onclick="welcomeUser()" style="margin-top:25px;">
+        🔊 HEAR SYSTEM GREETING
+    </button>
 
 </div>
-```
+
+<!-- PLATFORM -->
+
+<section id="platform">
+
+    <div class="section-title">
+        <small>// PLATFORM</small>
+        <h2>Everything connected.</h2>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="icon">🐙</div>
+            <h3>GitHub</h3>
+            <p>
+                Source control and collaboration.
+                Every code change becomes part of the delivery pipeline.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">⚙️</div>
+            <h3>Jenkins</h3>
+            <p>
+                Continuous integration and deployment automation
+                orchestrating the software delivery process.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🐳</div>
+            <h3>Docker</h3>
+            <p>
+                Applications are packaged into portable containers
+                for consistent deployments.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="icon">☁️</div>
+            <h3>AWS</h3>
+            <p>
+                Cloud compute infrastructure running the application
+                inside an EC2 environment.
+            </p>
+        </div>
+
+    </div>
 
 </section>
 
-<!-- Footer -->
+<!-- PIPELINE -->
 
-<footer>
-    <div>
-        <strong>⚡ DevOpsLab</strong> — Build • Deploy • Scale
+<section id="pipeline">
+
+    <div class="section-title">
+        <small>// CI/CD PIPELINE</small>
+        <h2>From commit to container.</h2>
     </div>
 
-```
-<div>
-    CI/CD Demo • AWS • Docker • Jenkins
-</div>
-```
+    <div class="pipeline">
+
+        <div class="node">
+            <div class="node-icon">👨‍💻</div>
+            <strong>Developer</strong>
+            <small>git push</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node">
+            <div class="node-icon">🐙</div>
+            <strong>GitHub</strong>
+            <small>Source Code</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node">
+            <div class="node-icon">⚙️</div>
+            <strong>Jenkins</strong>
+            <small>CI/CD</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node">
+            <div class="node-icon">🐳</div>
+            <strong>Docker</strong>
+            <small>Build Image</small>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node">
+            <div class="node-icon">☁️</div>
+            <strong>AWS EC2</strong>
+            <small>Deployment</small>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- TERMINAL -->
+
+<section id="terminal">
+
+    <div class="section-title">
+        <small>// SYSTEM TERMINAL</small>
+        <h2>Deployment console.</h2>
+    </div>
+
+    <div class="terminal">
+
+        <div class="terminal-header">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            &nbsp; devops@ec2-server
+        </div>
+
+        <div class="terminal-body" id="terminalOutput">
+
+            <div>devops@ec2:~$ systemctl status devops-core</div>
+
+            <div>✓ Jenkins agent ................. ONLINE</div>
+            <div>✓ Docker engine ................. ONLINE</div>
+            <div>✓ Nginx container ................ ONLINE</div>
+            <div>✓ AWS infrastructure ........... ONLINE</div>
+
+            <br>
+
+            <div>devops@ec2:~$ docker ps</div>
+
+            <div>
+                CONTAINER
+                &nbsp;&nbsp; IMAGE
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATUS
+            </div>
+
+            <div>
+                devops-demo
+                &nbsp;&nbsp; devops-demo:latest
+                &nbsp;&nbsp; UP
+            </div>
+
+            <br>
+
+            <div>devops@ec2:~$ ./deployment-status.sh</div>
+
+            <div>
+                <span id="typing"></span><span class="cursor"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- STATUS -->
+
+<section id="status">
+
+    <div class="section-title">
+        <small>// INFRASTRUCTURE</small>
+        <h2>System status.</h2>
+    </div>
+
+    <div class="status-grid">
+
+        <div class="status-card">
+            <h3>JENKINS</h3>
+            <strong>ONLINE</strong>
+        </div>
+
+        <div class="status-card">
+            <h3>DOCKER</h3>
+            <strong>RUNNING</strong>
+        </div>
+
+        <div class="status-card">
+            <h3>CONTAINER</h3>
+            <strong>HEALTHY</strong>
+        </div>
+
+        <div class="status-card">
+            <h3>DEPLOYMENT</h3>
+            <strong>READY</strong>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    ⚡ <span>DEVOPSLAB</span>
+    — Build • Deploy • Scale
+
+    <br><br>
+
+    CI/CD Demonstration • GitHub • Jenkins • Docker • AWS
 
 </footer>
 
+<script>
+
+/* ---------- VOICE ---------- */
+
+function welcomeUser() {
+
+    if (!("speechSynthesis" in window)) {
+        alert("Your browser does not support speech synthesis.");
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const message =
+        "Welcome, Asim Khan. How are you doing today? " +
+        "Your DevOps environment is online. " +
+        "Jenkins is operational, Docker is running, " +
+        "and your application has been successfully deployed to AWS.";
+
+    const speech = new SpeechSynthesisUtterance(message);
+
+    speech.rate = 0.9;
+    speech.pitch = 1.0;
+    speech.volume = 1.0;
+
+    speechSynthesis.speak(speech);
+}
+
+
+/* ---------- TERMINAL ANIMATION ---------- */
+
+const messages = [
+    "Scanning infrastructure...",
+    "Checking Jenkins agent...",
+    "Checking Docker engine...",
+    "Verifying container...",
+    "Checking deployment...",
+    "All systems operational.",
+    "Deployment pipeline ready."
+];
+
+let messageIndex = 0;
+let charIndex = 0;
+
+function typeMessage() {
+
+    const element = document.getElementById("typing");
+
+    if (charIndex < messages[messageIndex].length) {
+
+        element.textContent += messages[messageIndex].charAt(charIndex);
+
+        charIndex++;
+
+        setTimeout(typeMessage, 45);
+
+    } else {
+
+        setTimeout(() => {
+
+            element.textContent = "";
+            charIndex = 0;
+
+            messageIndex++;
+
+            if (messageIndex >= messages.length) {
+                messageIndex = 0;
+            }
+
+            typeMessage();
+
+        }, 1200);
+    }
+}
+
+typeMessage();
+
+</script>
+
 </body>
 </html>
+```
